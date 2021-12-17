@@ -1,6 +1,5 @@
 package view;
 
-import data.Algorithm;
 import data.GameCenter;
 import data.Spot;
 import data.TableData;
@@ -14,18 +13,16 @@ import java.awt.*;
 public class StatePanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private static JLabel colorLabel, modeLabel, timeJLabel, levelLabel;
+    private static JLabel colorLabel, modeLabel, timeJLabel;
     public static StatePanel my;
 
     public StatePanel() {
-        modeLabel = new JLabel("显示游戏模式");
-        levelLabel = new JLabel("难度级别:默认中级");
-        timeJLabel = new JLabel("倒计时:暂未设置");
-        colorLabel = new JLabel("玩家:黑棋先下");
+        modeLabel = new JLabel("  显示游戏模式");
+        timeJLabel = new JLabel("  倒计时:暂未设置");
+        colorLabel = new JLabel("  玩家:黑棋先下");
         this.setBackground(new Color(200, 200, 198));
         this.setLayout(new GridLayout(0, 1));
         this.add(modeLabel);
-        this.add(levelLabel);
         this.add(timeJLabel);
         this.add(colorLabel);
         my = this;
@@ -42,43 +39,29 @@ public class StatePanel extends JPanel {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
-                    colorLabel.setText("此面板显示异常！");
+                    colorLabel.setText("  此面板显示异常！");
                 }
                 String color = TableData.getNowColor();
                 if (Spot.blackChess.equals(color)) {
-                    colorLabel.setText("上手白棋，请下黑棋");
+                    colorLabel.setText("  上手白棋，请下黑棋");
                 } else if (Spot.whiteChess.equals(color)) {
-                    colorLabel.setText("上手黑棋，请下白棋");
+                    colorLabel.setText("  上手黑棋，请下白棋");
                 } else {
-                    colorLabel.setText("玩家:黑棋先下");
+                    colorLabel.setText("  玩家:黑棋先下");
                 }
 
                 switch (GameCenter.getMode()) {
                     case GameCenter.MODE_END:
-                        modeLabel.setText("游戏模式:未开始游戏");
+                        modeLabel.setText("  游戏模式:未开始");
                         break;
                     case GameCenter.MODE_COUPE:
-                        modeLabel.setText("游戏模式:双人对战");
+                        modeLabel.setText("  游戏模式:双人对战");
                         break;
                     case GameCenter.MODE_ROBOT:
-                        modeLabel.setText("游戏模式:人机对战");
+                        modeLabel.setText("  游戏模式:人机对战");
                         break;
                     case GameCenter.MODE_ONLINE:
-                        modeLabel.setText("游戏模式:联机对战");
-                        break;
-                    default:
-                        break;
-                }
-
-                switch (Algorithm.LEVEL) {
-                    case Algorithm.LEVEL_Low:
-                        levelLabel.setText("游戏难度:初级难度");
-                        break;
-                    case Algorithm.LEVEL_Middle:
-                        levelLabel.setText("游戏难度:中级难度");
-                        break;
-                    case Algorithm.LEVEL_High:
-                        levelLabel.setText("游戏难度:高级难度");
+                        modeLabel.setText("  游戏模式:联机对战");
                         break;
                     default:
                         break;
@@ -89,6 +72,6 @@ public class StatePanel extends JPanel {
     }
 
     public static void setTime(int mTime) {
-        timeJLabel.setText("剩余时间:" + mTime + "秒");
+        timeJLabel.setText("  剩余时间:" + mTime + "秒");
     }
 }

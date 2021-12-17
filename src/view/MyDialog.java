@@ -23,8 +23,7 @@ public class MyDialog extends JDialog {
     JPanel p1, p2, p3;
     JFrame jFrame;
     private static MyDialog my;
-    // 储存玩家上次输入的IP地址
-    private static String address = "192.168.118.135";
+    private static String address = "127.0.0.1";//默认ip
 
     MyDialog(JFrame jFrame, String title) {
         super(jFrame, title);

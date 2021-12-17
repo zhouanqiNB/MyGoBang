@@ -13,8 +13,7 @@ import view.UserPanel;
  */
 public class GameOnline {
 
-    private GameOnline() {
-    }
+    private GameOnline() {}
 
     public static void reStart() {
         GameCenter.reStart();
@@ -22,7 +21,7 @@ public class GameOnline {
     }
 
     /**
-     * 启动监控线程(监控对方是否下线)
+     * 监控对方是否下线
      */
     public static void monitor() {
         // 用于检测游戏是否结束
@@ -55,6 +54,5 @@ public class GameOnline {
 
         }).start();
     }
-
 }
 

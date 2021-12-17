@@ -3,7 +3,7 @@ package connect;
 import data.Player;
 import data.Spot;
 import view.ChatRoom;
-import view.ChessBroad;
+import view.ChessBoard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class DataSocket {
                 int row = Integer.valueOf(list.get(1));
                 int col = Integer.valueOf(list.get(2));
                 String color = Player.otherPlayer.getColor();
-                ChessBroad.submitPaint(new Spot(row, col, color));//在棋盘上绘制
+                ChessBoard.submitPaint(new Spot(row, col, color));//在棋盘上绘制
                 break;
             case TYPE_player:
                 String name = list.get(1);

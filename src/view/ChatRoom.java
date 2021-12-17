@@ -27,17 +27,27 @@ public class ChatRoom extends JPanel {
     public ChatRoom() {
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
         jArea = new JTextArea(7, 19);
-        jText = new JTextField(14);
+        jText = new JTextField(20);
         btClear = new JButton("清空");
         btSend = new JButton("发送");
         jArea.setEnabled(false);
         // 自动换行
         jArea.setLineWrap(true);
-        jArea.setText("聊天室内容：");
+        jArea.setText("聊天室：");
         jArea.setFont(new Font("宋体", Font.BOLD, 14));
+
         JScrollPane jsp = new JScrollPane(jArea);
+        jsp.setPreferredSize(new Dimension(220, 450));
+        jsp.setForeground(Color.BLACK);
         jsp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        
+        btClear.setBackground(new Color(176,196,222)); 
+        btSend.setBackground(new Color(176,196,222)); 
+        Dimension preferredSize = new Dimension(108,40);
+        btClear.setPreferredSize(preferredSize);
+        btSend.setPreferredSize(preferredSize);
+        
         this.add(jsp);
         this.add(jText);
         this.add(btClear);
@@ -47,7 +57,7 @@ public class ChatRoom extends JPanel {
     }
 
     public void addListener() {
-        btClear.addActionListener(event -> jArea.setText("聊天室内容："));
+        btClear.addActionListener(event -> jArea.setText("聊天室："));
         btSend.addActionListener(event -> {
             if (MySocket.isStart) {
                 String text = jText.getText();
@@ -57,7 +67,7 @@ public class ChatRoom extends JPanel {
                 }
             } else {
                 JOptionPane.showMessageDialog(MainFrame.mainFrame,
-                        "消息发送失败！未有玩家连接！", "发送失败",
+                        "没有玩家连接！", "发送失败",
                         JOptionPane.WARNING_MESSAGE);
             }
         });
@@ -70,7 +80,7 @@ public class ChatRoom extends JPanel {
                 text = "我说:" + text;
                 break;
             case peText:
-                text = "对方说:" + text;
+                text = "他说:" + text;
                 break;
             default:
                 break;

@@ -13,11 +13,6 @@ import java.awt.event.MouseEvent;
 
 /**
  * 界面显示 之 棋桌面板，显示棋盘，绘制棋子
- * *
- * 当界面重新被加载时，无法正常绘制出所有棋子！(加入线程后解决问题！)
- * *
- * 同样的，棋桌间断性地绘制失败(加入线程后解决问题！)
- * *
  * 将胜负判断加在绘制棋子里面则导致，游戏结束后，界面重新绘制时，导致多次判断胜负
  * *
  * 因此，新增一个函数，用于判断提交的绘制请求是否符合要求
@@ -28,27 +23,22 @@ import java.awt.event.MouseEvent;
  * *
  * 主界面重新绘制后，棋盘绘制不完整(加入线程,等待棋盘绘制完成,等待棋子绘制完成,再绘制结果)
  */
-public class ChessBroad extends JPanel {
+public class ChessBoard extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 棋子大小
-     */
-    protected static int chessSize;
-    public static ChessBroad myBroad;
-    /**
-     * 线程，解决棋盘覆盖掉棋子
-     */
+    protected static int chessSize;//棋子大小
+    public static ChessBoard myBoard;//棋盘
+    // 多线程，避免棋盘覆盖棋子
     static Thread gThread, allChessThread;
 
-    public ChessBroad() {
+    public ChessBoard() {
         this.setVisible(true);
         // 设置鼠标形状为手型
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.setBackground(new Color(249, 214, 91));
+        this.setBackground(new Color(255,231,96));
         this.addListener();
-        myBroad = this;
+        myBoard = this;
     }
 
     @Override
@@ -63,9 +53,9 @@ public class ChessBroad extends JPanel {
      * 界面显示，控件加载完毕后执行
      */
     public static void init() {
-        chessSize = myBroad.getWidth() / 19;
+        chessSize = myBoard.getWidth() / 19;
         paintTable();
-        myBroad.repaint();
+        myBoard.repaint();
     }
 
     public static void addGrade() {
@@ -80,7 +70,7 @@ public class ChessBroad extends JPanel {
     }
 
     /**
-     * 添加监听事件
+     * 添加监听事件，监听树苗点击事件
      */
     private void addListener() {
         this.addMouseListener(new MouseAdapter() {
@@ -91,7 +81,7 @@ public class ChessBroad extends JPanel {
                 int cy = e.getY();
                 System.out.print("点击坐标" + cx + ":" + cy);
 
-                // 根据坐标，获得行列
+                // 根据屏幕坐标，获得行列
                 int row = Coordinate.yToRow(cy);
                 int col = Coordinate.xToCol(cx);
                 Spot spot = new Spot(row - 1, col - 1, TableData.getNowColor());
@@ -115,16 +105,18 @@ public class ChessBroad extends JPanel {
         paintChessImages(spot);
         TableData.putDownChess(spot);
 
+        //画完之后检测是否形成了五子。
         if (TableData.isOver()) {
             addGrade();// 增加用户积分
             GameCenter.setMode(GameCenter.MODE_END);
             paintResult();
+            // 该白棋下了，游戏结束，说明黑棋赢了。
             if (Spot.whiteChess.equals(TableData.getNowColor())) {
-                // 当前应该下白棋，则黑棋获胜
-                JOptionPane.showMessageDialog(MainFrame.mainFrame, "黑棋获胜！增加100积分！",
+                JOptionPane.showMessageDialog(MainFrame.mainFrame, "黑棋获胜！积分+100！",
                         "游戏结束", JOptionPane.CANCEL_OPTION);
-            } else {
-                JOptionPane.showMessageDialog(MainFrame.mainFrame, "白棋获胜！增加100积分！",
+            } 
+            else {
+                JOptionPane.showMessageDialog(MainFrame.mainFrame, "白棋获胜！积分+100！",
                         "游戏结束", JOptionPane.CANCEL_OPTION);
             }
         }
@@ -132,14 +124,14 @@ public class ChessBroad extends JPanel {
 
     public static boolean isCanSpot(Spot spot) {
         if (TableData.hasSpot(spot.getRow(), spot.getCol())) {
-            System.out.println("ChessBroad 此点已有棋子！");
+            System.out.println("此点已有棋子！");
             return false;
         }
         //如果时联机对战，界面上只能下自己颜色的棋子
         if (GameCenter.getMode() == GameCenter.MODE_ONLINE) {
             if (!spot.getColor().equals(Player.myPlayer.getColor())) {
                 JOptionPane.showMessageDialog(MainFrame.mainFrame,
-                        "联机对战中，请先等待对方下棋", "请等待..",
+                        "联机对战中，请等待对方。", "请等待..",
                         JOptionPane.CANCEL_OPTION);
                 System.out.println(Player.myPlayer.getColor() + ":" + TableData.getNowColor());
                 return false;
@@ -149,7 +141,7 @@ public class ChessBroad extends JPanel {
         // 判断符合下棋要求
         if (GameCenter.isEnd()) {
             JOptionPane.showMessageDialog(null,
-                    "游戏未开始，或已结束！\n请选择游戏模式，以开始游戏，", "游戏未开始",
+                    "游戏不在进行中！\n请选择游戏模式以开始游戏。", "游戏未开始",
                     JOptionPane.CANCEL_OPTION);
             return false;
         }
@@ -157,17 +149,20 @@ public class ChessBroad extends JPanel {
     }
 
     /**
-     * 绘制单颗棋子,执行则绘制棋子，不判断棋子的正确性
-     *
+     * 绘制单颗棋子
+     * @param spot: 棋子类，分为无棋子、黑棋和白棋。
      */
     private static void paintChessImages(Spot spot) {
         if (spot != null) {
             int row = spot.getRow() + 1;
             int col = spot.getCol() + 1;
 
-            int cx = Coordinate.colToX(col);
+            int cx = Coordinate.colToX(col);//得到所要绘制棋子的那个位置。
             int cy = Coordinate.rowToY(row);
-            Graphics g = myBroad.getGraphics();
+            Graphics g = myBoard.getGraphics();
+            /*
+             利用Graphics对象获取画笔
+             */
             String color = spot.getColor();
             switch (color) {
                 case Spot.blackChess:
@@ -179,8 +174,10 @@ public class ChessBroad extends JPanel {
                 default:
                     return;
             }
-            g.fillOval(cx - chessSize / 2, cy - chessSize / 2, chessSize,
-                    chessSize);
+            // fillOval(int x,int y ,int width ,int  height)，填充椭圆
+            // X 和 Y是矩形框的左上角的坐标，width和height是宽和高。
+            // (cx,cy)就是那个交点
+            g.fillOval(cx - chessSize / 2, cy - chessSize / 2, chessSize,chessSize);
         }
     }
 
@@ -188,24 +185,25 @@ public class ChessBroad extends JPanel {
      * 绘制棋桌
      */
     private static void paintTable() {
-        final Graphics graphics = myBroad.getGraphics();
+        final Graphics graphics = myBoard.getGraphics();
         graphics.setFont(new Font("黑体", Font.BOLD, 20));
         // 在线程中绘制棋盘
         gThread = new Thread(() -> {
             try {
                 Thread.sleep(10);
-            } catch (InterruptedException e) {
-            }
+            } catch (InterruptedException e) {}
             for (int i = 0; i < 19; i++) {
-                graphics.drawString("" + (i + 1), 0, 20 + chessSize * i);
-                graphics.drawLine(chessSize / 2, chessSize / 2 + chessSize * i,
-                        chessSize / 2 + chessSize * 18, chessSize / 2
-                                + chessSize * i);
+                int hori_startx=chessSize / 2;
+                int hori_starty=chessSize * i+chessSize / 2;
+                int hori_endx=chessSize / 2 + chessSize * 18;
+                int hori_endy=chessSize / 2 + chessSize * i;
+                graphics.drawLine(hori_startx, hori_starty, hori_endx, hori_endy);
 
-                graphics.drawString("" + (i + 1), chessSize * i + 8, 15);
-                graphics.drawLine(chessSize / 2 + chessSize * i, chessSize / 2,
-                        chessSize / 2 + chessSize * i, chessSize / 2
-                                + chessSize * 18);
+                int vert_startx=chessSize / 2 + chessSize * i;
+                int vert_starty=chessSize / 2;
+                int vert_endx=chessSize / 2 + chessSize * i;
+                int vert_endy=chessSize / 2+ chessSize * 18;
+                graphics.drawLine(vert_startx, vert_starty, vert_endx, vert_endy);
             }
         });
         gThread.start();
@@ -232,7 +230,7 @@ public class ChessBroad extends JPanel {
     }
 
     /**
-     * 绘制赢棋后的五子连珠状况
+     * 绘制赢棋后的五子连珠
      */
     private static void paintResult() {
         new Thread(() -> {
@@ -248,7 +246,7 @@ public class ChessBroad extends JPanel {
                 System.out.println("赢棋起始位置：" + TableData.indexRow + " " + TableData.indexCol);
                 System.out.println("赢棋终止位置：" + TableData.endRow + " " + TableData.endCol);
 
-                Graphics2D g = (Graphics2D) myBroad.getGraphics();
+                Graphics2D g = (Graphics2D) myBoard.getGraphics();
                 int indexX = Coordinate.colToX(TableData.indexCol + 1);
                 int indexY = Coordinate.rowToY(TableData.indexRow + 1);
                 int endX = Coordinate.colToX(TableData.endCol + 1);
@@ -259,6 +257,5 @@ public class ChessBroad extends JPanel {
                 g.drawLine(indexX, indexY, endX, endY);
             }
         }).start();
-
     }
 }

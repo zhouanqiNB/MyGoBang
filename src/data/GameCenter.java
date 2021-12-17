@@ -49,23 +49,7 @@ public class GameCenter {
         }
     }
 
-    /**
-     * 仅供调试，无实际功能，显示所有点的权值
-     */
-    public static void showWeight(String mColor) {
-        if (Spot.notChess.equals(mColor)) {
-            System.out.println("showWeight 颜色设置错误！");
-            return;
-        }
-        for (int i = 0; i < 19; i++) {
-            for (int j = 0; j < 19; j++) {
-                Spot spot = TableData.getSpot(i, j);
-                int n = Algorithm.getWeight(spot, mColor);
-                System.out.print(n + ",\t");
-            }
-            System.out.println();
-        }
-    }
+
 
     public static int getMode() {
         return gameModel;
