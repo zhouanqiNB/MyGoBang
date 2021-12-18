@@ -1,16 +1,14 @@
 package view;
 
-import data.GameCenter;
-import data.Player;
+import controller.GameCenter;
+import model.Player;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 
 /**
- * 主界面UI 版本0.3 2017.06.23
- *
- * @author chaos
+ * 主界面UI 
  */
 public class MainFrame extends JFrame {
 

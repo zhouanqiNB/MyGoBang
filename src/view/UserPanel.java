@@ -1,6 +1,6 @@
 package view;
 
-import data.Player;
+import model.Player;
 
 import javax.swing.*;
 import java.awt.*;

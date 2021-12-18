@@ -3,9 +3,9 @@ package view;
 import connect.DataSocket;
 import connect.MyIPTool;
 import connect.MySocket;
-import data.Player;
-import data.Spot;
-import game.GameOnline;
+import model.Player;
+import model.Spot;
+import controller.GameOnline;
 
 import javax.swing.*;
 import java.awt.*;

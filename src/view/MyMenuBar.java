@@ -1,7 +1,7 @@
 package view;
 
 import connect.MyIPTool;
-import game.CountDown;
+import controller.CountDown;
 
 import javax.swing.*;
 import java.awt.*;

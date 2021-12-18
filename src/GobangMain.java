@@ -3,8 +3,6 @@ import view.MainFrame;
 
 /**
  * 主类，主函数类
- *
- * @author chaos
  */
 public class GobangMain {
 

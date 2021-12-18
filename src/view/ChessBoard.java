@@ -1,10 +1,10 @@
 package view;
 
 import connect.DataSocket;
-import data.GameCenter;
-import data.Player;
-import data.Spot;
-import data.TableData;
+import controller.GameCenter;
+import model.Player;
+import model.Spot;
+import model.TableData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,13 +14,13 @@ import java.awt.event.MouseEvent;
 /**
  * 界面显示 之 棋桌面板，显示棋盘，绘制棋子
  * 将胜负判断加在绘制棋子里面则导致，游戏结束后，界面重新绘制时，导致多次判断胜负
- * *
+ * 
  * 因此，新增一个函数，用于判断提交的绘制请求是否符合要求
- * *
+ * 
  * 绘制圆形fillOval,指定的位置是左顶点的位置！
- * *
+ * 
  * 新增绘制五子连珠情况
- * *
+ * 
  * 主界面重新绘制后，棋盘绘制不完整(加入线程,等待棋盘绘制完成,等待棋子绘制完成,再绘制结果)
  */
 public class ChessBoard extends JPanel {
@@ -30,7 +30,8 @@ public class ChessBoard extends JPanel {
     protected static int chessSize;//棋子大小
     public static ChessBoard myBoard;//棋盘
     // 多线程，避免棋盘覆盖棋子
-    static Thread gThread, allChessThread;
+    static Thread gThread;
+    static Thread allChessThread;
 
     public ChessBoard() {
         this.setVisible(true);
@@ -45,7 +46,7 @@ public class ChessBoard extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
         paintTable();
-        painAllChess();
+        paintAllChess();
         paintResult();
     }
 
@@ -186,7 +187,6 @@ public class ChessBoard extends JPanel {
      */
     private static void paintTable() {
         final Graphics graphics = myBoard.getGraphics();
-        graphics.setFont(new Font("黑体", Font.BOLD, 20));
         // 在线程中绘制棋盘
         gThread = new Thread(() -> {
             try {
@@ -212,7 +212,7 @@ public class ChessBoard extends JPanel {
     /**
      * 绘制所有棋子
      */
-    private static void painAllChess() {
+    private static void paintAllChess() {
         // 绘制所有棋子线程，没有线程时棋子可能绘制失败！
         allChessThread = new Thread(() -> {
             try {// 等待棋桌绘制完成

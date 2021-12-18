@@ -1,8 +1,8 @@
 package view;
 
-import data.GameCenter;
-import data.Spot;
-import data.TableData;
+import controller.GameCenter;
+import model.Spot;
+import model.TableData;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,9 +56,6 @@ public class StatePanel extends JPanel {
                         break;
                     case GameCenter.MODE_COUPE:
                         modeLabel.setText("  游戏模式:双人对战");
-                        break;
-                    case GameCenter.MODE_ROBOT:
-                        modeLabel.setText("  游戏模式:人机对战");
                         break;
                     case GameCenter.MODE_ONLINE:
                         modeLabel.setText("  游戏模式:联机对战");

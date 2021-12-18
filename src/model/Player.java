@@ -1,9 +1,7 @@
-package data;
+package model;
 
 /**
  * 玩家类
- *
- * @author chaos
  */
 public class Player {
     protected String name;

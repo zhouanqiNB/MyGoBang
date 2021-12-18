@@ -1,15 +1,13 @@
-package game;
+package controller;
 
 import connect.MySocket;
-import data.GameCenter;
-import data.Player;
+import controller.GameCenter;
+import model.Player;
 import view.MyDialog;
 import view.UserPanel;
 
 /**
  * 联机对战类
- *
- * @author chaos
  */
 public class GameOnline {
 

@@ -1,9 +1,10 @@
 package connect;
 
-import data.Player;
-import data.Spot;
+import model.Player;
+import model.Spot;
 import view.ChatRoom;
 import view.ChessBoard;
+import model.TableData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class DataSocket {
     public final static String TYPE_chat = "1";
     public final static String TYPE_spot = "2";
     public final static String TYPE_player = "3";
+    public final static String TYPE_regret = "4";
 
     /**
      * 发送数据，处理数据后发送
@@ -52,6 +54,16 @@ public class DataSocket {
     }
 
     /**
+     * 发送悔棋的信息
+     */
+    public static void sendRegret() {
+        List<String> list = new ArrayList<>();
+        list.add(TYPE_regret);
+        MySocket.sendData(list);
+    }
+
+
+    /**
      * 接收数据，数据处理后显示
      * ------------------------------
      * @param list: 是收到的消息，在MySocket中把收到的数据包
@@ -75,6 +87,10 @@ public class DataSocket {
                 int grade = Integer.valueOf(list.get(2));
                 Player.otherPlayer.setName(name);
                 Player.otherPlayer.setGrade(grade);
+                break;
+            case TYPE_regret:
+                System.out.println("对方请求悔棋！");
+                TableData.heRegret();//他悔棋了
                 break;
             default:
                 System.out.println("不是有用的数据！" + str);

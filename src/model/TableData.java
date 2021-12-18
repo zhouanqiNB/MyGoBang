@@ -1,4 +1,8 @@
-package data;
+package model;
+
+import view.ChessBoard;
+
+import java.util.Stack;
 
 /**
  * 储存处理棋桌数据，19*19
@@ -11,11 +15,14 @@ public class TableData {
     // 棋盘数组
     private final static Spot[][] spots = new Spot[19][19];
 
+    private final static Stack<Spot> stack=new Stack<Spot>();
+
     // 游戏结束时，五子连珠起始位置和结束位置
     public static int indexRow = 0;
     public static int indexCol = 0;
     public static int endRow = 0;
     public static int endCol = 0;
+
 
     private TableData() {}
 
@@ -27,6 +34,9 @@ public class TableData {
         gameOver = false;
         nowColor = Spot.blackChess;//先走给
         indexRow = indexCol = endRow = endCol = 0;
+        while(stack.size()!=0){
+            stack.pop();
+        }
         System.out.println("已初始化");
     }
 
@@ -35,6 +45,11 @@ public class TableData {
      * @param spot: 下的棋的坐标
      */
     public static void putDownChess(Spot spot) {
+        stack.push(spot);
+
+        printStack();
+
+
         String mColor = spot.getColor();
         int row = spot.getRow();
         int col = spot.getCol();
@@ -166,4 +181,90 @@ public class TableData {
         String color = spot.getColor();
         return !Spot.notChess.equals(color);
     }
+
+
+    public static void iRegret() {
+        
+        //我悔棋
+        //如果是我的回合
+        // 从栈里pop出两个，
+        // 把这两个从spots[][]中除名
+        // 并且重绘桌面
+        // 问题是在什么时候加这个stack
+        if(nowColor==Player.myPlayer.getColor()){
+            Spot firstChess=stack.pop();
+            Spot secondChess=stack.pop();
+            spots[firstChess.getRow()][firstChess.getCol()].setColor(Spot.notChess);
+            spots[secondChess.getRow()][secondChess.getCol()].setColor(Spot.notChess);
+
+            ChessBoard.myBoard.repaint();
+            printStack();
+
+            nowColor=secondChess.getColor();//最后一个弹出的是我的棋子
+
+        }
+        //如果是他的回合
+        // 从栈里pop出一个，        
+        // 把这1个从spots[][]中除名
+        // 并且重绘桌面
+        else{
+            Spot firstChess=stack.pop();
+            spots[firstChess.getRow()][firstChess.getCol()].setColor(Spot.notChess);
+
+            ChessBoard.myBoard.repaint();
+            printStack();
+
+            nowColor=firstChess.getColor();
+
+        }
+    }
+
+    public static void printStack(){
+        System.out.println("================================================");
+
+        for (Spot x : stack) {
+            System.out.println(x.getRow()+","+x.getCol()+","+x.getColor());
+        }
+        System.out.println("================================================");
+    }
+    public static void heRegret() {
+        // 对方悔棋
+
+        //如果是我的回合
+        // 从栈里pop出1个，
+        // 把这1个从spots[][]中除名
+        // 并且重绘桌面
+        if(nowColor==Player.myPlayer.getColor()){
+            System.out.println("现在的颜色是"+nowColor);
+            Spot firstChess=stack.pop();
+            
+            spots[firstChess.getRow()][firstChess.getCol()].setColor(Spot.notChess);
+
+            ChessBoard.myBoard.repaint();
+            printStack();
+            
+            nowColor=firstChess.getColor();
+
+
+
+        }
+        //如果是他的回合
+        // 从栈里pop出2个，        
+        // 把这2个从spots[][]中除名
+        // 并且重绘桌面
+        else{
+            System.out.println("现在的颜色是"+nowColor);
+            Spot firstChess=stack.pop();
+            Spot secondChess=stack.pop();
+            spots[firstChess.getRow()][firstChess.getCol()].setColor(Spot.notChess);
+            spots[secondChess.getRow()][secondChess.getCol()].setColor(Spot.notChess);
+
+            ChessBoard.myBoard.repaint();
+            printStack();
+
+            nowColor=secondChess.getColor();//最后一个弹出的是我的棋子
+
+        }
+    }
+
 }

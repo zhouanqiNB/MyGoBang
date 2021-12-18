@@ -1,5 +1,6 @@
-package data;
+package controller;
 
+import model.TableData;
 /**
  * 游戏中心类，控制游戏数据
  */
@@ -10,7 +11,7 @@ public class GameCenter {
      */
     private static int gameModel;
     /**
-     * 游戏模式 ：游戏结束
+     * 游戏模式 ：游戏结束，或者是游戏还没开始。
      */
     public final static int MODE_END = 0;
     /**
@@ -18,13 +19,9 @@ public class GameCenter {
      */
     public final static int MODE_COUPE = 1;
     /**
-     * 游戏模式 ：人机对战
-     */
-    public final static int MODE_ROBOT = 2;
-    /**
      * 游戏模式 ：联机对战
      */
-    public final static int MODE_ONLINE = 3;
+    public final static int MODE_ONLINE = 2;
 
     /**
      * 重新游戏

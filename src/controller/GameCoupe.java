@@ -1,14 +1,11 @@
-package game;
+package controller;
 
-import data.GameCenter;
-import data.Player;
-import data.Spot;
+import model.Player;
+import model.Spot;
 import view.UserPanel;
 
 /**
  * 双人对战
- *
- * @author chaos
  */
 public class GameCoupe {
     private GameCoupe() {}
